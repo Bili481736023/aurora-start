@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>极光起始页 · Aurora Start</title>
+    <title>极光起始页 · 把新标签页变成一片极光</title>
+    <meta name="description" content="极光起始页是一个开源的浏览器新标签页插件，支持动态极光背景、四引擎搜索、自定义快捷链接、本地搜索历史，完全免费，代码开源。" />
+    <meta property="og:title" content="极光起始页 · 把新标签页变成一片极光" />
+    <meta property="og:description" content="一个开源的浏览器新标签页插件，极光背景、四引擎搜索、自定义快捷链接，完全免费。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://Bili481736023.github.io/aurora-start/" />
+    <meta property="og:image" content="https://Bili481736023.github.io/aurora-start/images/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <style>
-        /* ========== 全局重置 & 基础 ========== */
+        /* ========== 全局重置 ========== */
         * {
             margin: 0;
             padding: 0;
@@ -13,34 +21,140 @@
         }
 
         body {
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #0a0a1a;
-            color: #ffffff;
-            user-select: none;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.7;
+            transition: background 0.6s ease, color 0.4s ease;
         }
 
-        /* ========== 背景 - 动态光晕层 ========== */
+        /* ========== 极光背景层 ========== */
         .bg-layer {
             position: fixed;
             inset: 0;
             z-index: 0;
-            background: radial-gradient(ellipse at 20% 20%, rgba(102, 126, 234, 0.25) 0%, transparent 60%),
+            transition: background 0.8s ease;
+        }
+
+        /* ========== 深色模式（默认） ========== */
+        :root {
+            --bg-primary: #0a0a1a;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.55);
+            --text-muted: rgba(255, 255, 255, 0.20);
+            --shadow-color: rgba(102, 126, 234, 0.08);
+            --badge-bg: rgba(102, 126, 234, 0.15);
+            --badge-border: rgba(102, 126, 234, 0.20);
+            --gradient-text: linear-gradient(135deg, #ffffff 50%, rgba(255, 255, 255, 0.60));
+            --gradient-btn: linear-gradient(135deg, #667eea, #764ba2);
+            --section-bg: rgba(255, 255, 255, 0.02);
+            --glow-opacity: 0.50;
+            --bg-layer-bg: radial-gradient(ellipse at 20% 20%, rgba(102, 126, 234, 0.25) 0%, transparent 60%),
                 radial-gradient(ellipse at 80% 80%, rgba(118, 75, 162, 0.30) 0%, transparent 55%),
                 radial-gradient(ellipse at 50% 50%, rgba(251, 194, 235, 0.08) 0%, transparent 70%),
                 #0a0a1a;
-            animation: bgPulse 12s ease-in-out infinite alternate;
         }
 
+        /* ========== 浅色模式（系统检测） ========== */
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg-primary: #f0f2f8;
+                --bg-card: rgba(255, 255, 255, 0.60);
+                --bg-card-hover: rgba(255, 255, 255, 0.85);
+                --border-color: rgba(0, 0, 0, 0.06);
+                --text-primary: #1a1a2e;
+                --text-secondary: rgba(0, 0, 0, 0.50);
+                --text-muted: rgba(0, 0, 0, 0.20);
+                --shadow-color: rgba(102, 126, 234, 0.06);
+                --badge-bg: rgba(102, 126, 234, 0.08);
+                --badge-border: rgba(102, 126, 234, 0.12);
+                --gradient-text: linear-gradient(135deg, #1a1a2e 50%, rgba(26, 26, 46, 0.60));
+                --section-bg: rgba(255, 255, 255, 0.30);
+                --glow-opacity: 0.12;
+                --bg-layer-bg: radial-gradient(ellipse at 20% 20%, rgba(102, 126, 234, 0.08) 0%, transparent 60%),
+                    radial-gradient(ellipse at 80% 80%, rgba(118, 75, 162, 0.06) 0%, transparent 55%),
+                    #f0f2f8;
+            }
+
+            .glow {
+                opacity: 0.12 !important;
+            }
+
+            .footer {
+                color: rgba(0, 0, 0, 0.20) !important;
+                border-top-color: rgba(0, 0, 0, 0.06) !important;
+            }
+            .footer a {
+                color: rgba(0, 0, 0, 0.25) !important;
+            }
+            .footer a:hover {
+                color: rgba(0, 0, 0, 0.60) !important;
+            }
+            .footer .easter-egg {
+                opacity: 0.70 !important;
+            }
+            .section {
+                background: rgba(255, 255, 255, 0.20) !important;
+                border-color: rgba(0, 0, 0, 0.04) !important;
+            }
+            .section .text-block h2 {
+                color: #1a1a2e !important;
+            }
+            .section .text-block p {
+                color: rgba(0, 0, 0, 0.50) !important;
+            }
+            .section:nth-child(even) {
+                background: rgba(255, 255, 255, 0.35) !important;
+            }
+            .badge {
+                background: rgba(102, 126, 234, 0.08) !important;
+                border-color: rgba(102, 126, 234, 0.12) !important;
+                color: rgba(0, 0, 0, 0.40) !important;
+            }
+            .btn-secondary {
+                background: rgba(0, 0, 0, 0.04) !important;
+                border-color: rgba(0, 0, 0, 0.08) !important;
+                color: rgba(0, 0, 0, 0.60) !important;
+            }
+            .btn-secondary:hover {
+                background: rgba(0, 0, 0, 0.08) !important;
+                color: #1a1a2e !important;
+            }
+            .feature-badge {
+                background: rgba(0, 0, 0, 0.03) !important;
+                color: rgba(0, 0, 0, 0.40) !important;
+            }
+            .header .subtitle {
+                color: rgba(0, 0, 0, 0.40) !important;
+            }
+            .header .subtitle strong {
+                color: rgba(0, 0, 0, 0.70) !important;
+            }
+            .install-note {
+                background: rgba(255, 255, 255, 0.40) !important;
+                border-color: rgba(0, 0, 0, 0.06) !important;
+            }
+            .install-note p {
+                color: rgba(0, 0, 0, 0.40) !important;
+            }
+            .install-note code {
+                background: rgba(0, 0, 0, 0.04) !important;
+                color: rgba(0, 0, 0, 0.60) !important;
+            }
+        }
+
+        /* ========== 光晕 ========== */
         .glow {
             position: absolute;
             border-radius: 50%;
             filter: blur(120px);
-            opacity: 0.5;
+            opacity: var(--glow-opacity);
             pointer-events: none;
             will-change: transform;
+            transition: opacity 1s ease;
         }
         .glow--1 {
             width: 60vw;
@@ -67,721 +181,338 @@
             animation: floatGlow3 22s ease-in-out infinite alternate;
         }
 
-        @keyframes bgPulse {
-            0% {
-                opacity: 0.8;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
         @keyframes floatGlow1 {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            33% {
-                transform: translate(8%, 5%) scale(1.1);
-            }
-            66% {
-                transform: translate(-3%, 10%) scale(0.9);
-            }
-            100% {
-                transform: translate(5%, -5%) scale(1.05);
-            }
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(8%, 5%) scale(1.1); }
+            66% { transform: translate(-3%, 10%) scale(0.9); }
+            100% { transform: translate(5%, -5%) scale(1.05); }
         }
-
         @keyframes floatGlow2 {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            50% {
-                transform: translate(-8%, -10%) scale(1.15);
-            }
-            100% {
-                transform: translate(10%, 8%) scale(0.9);
-            }
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-8%, -10%) scale(1.15); }
+            100% { transform: translate(10%, 8%) scale(0.9); }
         }
-
         @keyframes floatGlow3 {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            50% {
-                transform: translate(10%, -8%) scale(1.2);
-            }
-            100% {
-                transform: translate(-10%, 12%) scale(0.85);
-            }
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(10%, -8%) scale(1.2); }
+            100% { transform: translate(-10%, 12%) scale(0.85); }
         }
 
-        /* ========== 内容容器 - 紧凑垂直布局 ========== */
+        /* ========== 背景层 ========== */
+        .bg-layer {
+            background: var(--bg-layer-bg);
+        }
+
+        /* ========== 内容容器 ========== */
         .container {
             position: relative;
             z-index: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100vw;
-            height: 100vh;
-            padding: 0 24px 80px 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 80px 24px 40px;
+            min-height: 100vh;
         }
 
-        .content-wrapper {
-            width: 100%;
-            max-width: 680px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: fadeUp 1.2s ease-out both;
-            animation-delay: 0.2s;
-            margin-top: -20px;
-        }
-
-        /* ========== 时间 ========== */
-        .time-section {
+        /* ========== 头部 ========== */
+        .header {
             text-align: center;
-            width: 100%;
-            margin-bottom: 12px;
+            margin-bottom: 80px;
+            animation: fadeUp 0.8s ease-out both;
         }
 
-        .time {
-            font-size: clamp(48px, 6vw, 80px);
+        .header .badge {
+            display: inline-block;
+            background: var(--badge-bg);
+            border: 1px solid var(--badge-border);
+            border-radius: 40px;
+            padding: 4px 18px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            letter-spacing: 0.12em;
+            margin-bottom: 18px;
+        }
+
+        .header h1 {
+            font-size: clamp(48px, 9vw, 88px);
             font-weight: 300;
-            letter-spacing: 0.04em;
-            line-height: 1.1;
-            background: linear-gradient(135deg, #ffffff 50%, rgba(255, 255, 255, 0.65));
+            letter-spacing: 0.02em;
+            background: var(--gradient-text);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 80px rgba(102, 126, 234, 0.15);
-            font-variant-numeric: tabular-nums;
+            margin-bottom: 8px;
         }
 
-        .date {
-            margin-top: 6px;
-            font-size: clamp(13px, 1.4vw, 18px);
+        .header .subtitle {
+            font-size: clamp(18px, 2.4vw, 28px);
             font-weight: 300;
-            color: rgba(255, 255, 255, 0.50);
-            letter-spacing: 0.12em;
-            backdrop-filter: blur(4px);
-            padding: 2px 16px;
-            border-radius: 40px;
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-secondary);
+            letter-spacing: 0.08em;
+        }
+        .header .subtitle strong {
+            color: var(--text-primary);
+            font-weight: 400;
         }
 
-        /* ========== 搜索区域 ========== */
-        .search-section {
-            width: 100%;
-            position: relative;
-            margin-bottom: 12px;
-        }
-
-        .search-box {
+        /* ========== 段落区块 ========== */
+        .section {
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(20px) saturate(1.4);
-            -webkit-backdrop-filter: blur(20px) saturate(1.4);
-            border-radius: 60px;
-            padding: 4px 4px 4px 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.50), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-            transition: border-color 0.3s ease, box-shadow 0.4s ease, transform 0.3s ease;
-            position: relative;
-            z-index: 3;
+            gap: 60px;
+            margin-bottom: 80px;
+            padding: 40px 48px;
+            background: var(--section-bg);
+            border-radius: 32px;
+            border: 1px solid var(--border-color);
+            transition: background 0.3s ease, border-color 0.3s ease;
+            animation: fadeUp 0.8s ease-out both;
         }
 
-        .search-box:focus-within {
-            border-color: rgba(102, 126, 234, 0.50);
-            box-shadow: 0 16px 64px rgba(102, 126, 234, 0.12), 0 0 0 4px rgba(102, 126, 234, 0.06),
-                inset 0 1px 0 rgba(255, 255, 255, 0.08);
-            transform: scale(1.01);
+        .section:nth-child(even) {
+            flex-direction: row-reverse;
+            background: var(--bg-card);
         }
 
-        .search-icon {
-            flex-shrink: 0;
-            width: 20px;
-            height: 20px;
-            opacity: 0.5;
-            fill: none;
-            stroke: rgba(255, 255, 255, 0.70);
-            stroke-width: 2.2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: opacity 0.3s ease;
-        }
-        .search-box:focus-within .search-icon {
-            opacity: 0.9;
-            stroke: #8a9cf0;
-        }
-
-        .search-input {
+        .section .text-block {
             flex: 1;
             min-width: 0;
-            padding: 14px 14px 14px 12px;
-            font-size: clamp(15px, 1.4vw, 18px);
-            font-weight: 400;
-            color: #ffffff;
-            background: transparent;
-            border: none;
-            outline: none;
-            letter-spacing: 0.02em;
-        }
-        .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.28);
-            font-weight: 300;
-            letter-spacing: 0.04em;
-            transition: color 0.3s ease;
-        }
-        .search-input::-webkit-search-cancel-button {
-            display: none;
         }
 
-        .search-btn {
-            flex-shrink: 0;
-            padding: 10px 24px;
-            margin-left: 4px;
-            font-size: clamp(13px, 1vw, 16px);
-            font-weight: 500;
-            color: #ffffff;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border: none;
-            border-radius: 40px;
-            cursor: pointer;
-            transition: transform 0.25s ease, box-shadow 0.3s ease, opacity 0.2s ease;
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.25);
-            letter-spacing: 0.04em;
-            white-space: nowrap;
-        }
-        .search-btn:hover {
-            transform: scale(1.04);
-            box-shadow: 0 6px 28px rgba(102, 126, 234, 0.35);
-        }
-        .search-btn:active {
-            transform: scale(0.96);
-            opacity: 0.80;
-        }
-
-        /* ========== 历史下拉 ========== */
-        .history-dropdown {
-            position: absolute;
-            top: calc(100% + 12px);
-            left: 0;
-            right: 0;
-            background: rgba(20, 20, 40, 0.80);
-            backdrop-filter: blur(24px) saturate(1.6);
-            -webkit-backdrop-filter: blur(24px) saturate(1.6);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.60);
-            padding: 8px 0;
-            max-height: 240px;
-            overflow-y: auto;
-            opacity: 0;
-            transform: translateY(-8px) scale(0.96);
-            pointer-events: none;
-            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 0.68, 0, 1.0);
-            z-index: 10;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
-        }
-        .history-dropdown::-webkit-scrollbar {
-            width: 4px;
-        }
-        .history-dropdown::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .history-dropdown::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-        }
-
-        .history-dropdown.show {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: auto;
-        }
-
-        .history-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 20px;
-            color: rgba(255, 255, 255, 0.70);
-            font-size: 15px;
-            cursor: pointer;
-            transition: background 0.15s ease, color 0.15s ease;
-            border: none;
-            background: transparent;
-            width: 100%;
-            text-align: left;
-            font-family: inherit;
-            gap: 12px;
-        }
-        .history-item:hover {
-            background: rgba(255, 255, 255, 0.06);
-            color: #ffffff;
-        }
-        .history-item .history-text {
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .history-item .history-delete {
-            flex-shrink: 0;
-            font-size: 14px;
-            opacity: 0.3;
-            transition: opacity 0.2s ease;
-            background: none;
-            border: none;
-            color: inherit;
-            cursor: pointer;
-            padding: 0 4px;
-        }
-        .history-item .history-delete:hover {
-            opacity: 0.8;
-        }
-
-        .history-empty {
-            padding: 20px;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.25);
-            font-size: 14px;
-            letter-spacing: 0.04em;
-        }
-
-        .history-actions {
-            display: flex;
-            justify-content: flex-end;
-            padding: 8px 20px 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            gap: 12px;
-        }
-        .history-clear-btn {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.25);
-            font-size: 13px;
-            cursor: pointer;
-            padding: 4px 12px;
-            border-radius: 30px;
-            transition: background 0.2s ease, color 0.2s ease;
-            font-family: inherit;
-            letter-spacing: 0.04em;
-        }
-        .history-clear-btn:hover {
-            background: rgba(255, 255, 255, 0.06);
-            color: rgba(255, 255, 255, 0.60);
-        }
-
-        /* ========== 快捷链接 ========== */
-        .shortcuts-section {
-            width: 100%;
-            margin-bottom: 0;
-        }
-
-        .shortcuts-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-            min-height: 48px;
-            padding: 2px 0;
-        }
-
-        .shortcut-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-            padding: 6px 10px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-            cursor: pointer;
-            min-width: 52px;
-            text-decoration: none;
-            color: rgba(255, 255, 255, 0.75);
+        .section .text-block .label {
             font-size: 12px;
-            position: relative;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.20);
-        }
-
-        .shortcut-item:hover {
-            transform: translateY(-3px) scale(1.04);
-            background: rgba(255, 255, 255, 0.10);
-            box-shadow: 0 6px 24px rgba(102, 126, 234, 0.15);
-            color: #ffffff;
-        }
-
-        .shortcut-item .shortcut-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            object-fit: contain;
-            background: rgba(255, 255, 255, 0.06);
-            padding: 3px;
-            flex-shrink: 0;
-        }
-
-        .shortcut-item .shortcut-name {
-            font-size: 10px;
             font-weight: 400;
-            letter-spacing: 0.04em;
-            max-width: 56px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            color: var(--text-muted);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .section .text-block h2 {
+            font-size: clamp(28px, 3.2vw, 40px);
+            font-weight: 400;
+            color: var(--text-primary);
+            letter-spacing: 0.02em;
+            margin-bottom: 12px;
             line-height: 1.2;
         }
 
-        .shortcut-item .shortcut-delete {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: rgba(255, 70, 70, 0.85);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: white;
-            font-size: 10px;
-            line-height: 14px;
-            text-align: center;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.2s ease, transform 0.2s ease;
-            transform: scale(0.7);
-            pointer-events: none;
-            font-weight: 600;
-        }
-
-        .shortcut-item:hover .shortcut-delete {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto;
-        }
-
-        .shortcut-item .shortcut-delete:hover {
-            background: rgba(255, 50, 50, 1);
-            transform: scale(1.15);
-        }
-
-        .shortcuts-add-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1px;
-            padding: 6px 10px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1.5px dashed rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            min-width: 52px;
-            color: rgba(255, 255, 255, 0.30);
-            font-size: 10px;
-        }
-
-        .shortcuts-add-btn:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 255, 255, 0.30);
-            color: rgba(255, 255, 255, 0.60);
-            transform: scale(1.02);
-        }
-
-        .shortcuts-add-btn .add-icon {
-            font-size: 20px;
-            line-height: 1;
+        .section .text-block p {
+            font-size: clamp(15px, 1.2vw, 18px);
+            color: var(--text-secondary);
             font-weight: 300;
-        }
-
-        /* ========== 页脚 - 搜索引擎选择（固定在底部） ========== */
-        .footer {
-            position: fixed;
-            bottom: 28px;
-            left: 0;
-            right: 0;
-            z-index: 1;
-            text-align: center;
-            animation: fadeUp 1.2s ease-out both;
-            animation-delay: 1.0s;
-        }
-
-        .footer-trigger {
-            display: inline-block;
-            cursor: pointer;
-            padding: 6px 18px;
-            border-radius: 40px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(4px);
-            transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-            user-select: none;
-            font-size: 14px;
-            font-weight: 300;
-            color: rgba(255, 255, 255, 0.25);
-            letter-spacing: 0.12em;
-        }
-
-        .footer-trigger:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.12);
-            color: rgba(255, 255, 255, 0.55);
-        }
-
-        .footer-trigger .icon-arrow {
-            display: inline-block;
-            margin-left: 6px;
-            font-size: 10px;
-            transition: transform 0.3s ease;
-        }
-
-        .footer-trigger.active .icon-arrow {
-            transform: rotate(180deg);
-        }
-
-        /* ===== 搜索引擎弹出面板 ===== */
-        .engine-popup {
-            position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%) scale(0.92) translateY(12px);
-            background: rgba(20, 20, 40, 0.75);
-            backdrop-filter: blur(24px) saturate(1.6);
-            -webkit-backdrop-filter: blur(24px) saturate(1.6);
-            border-radius: 20px;
-            padding: 10px 0;
-            min-width: 200px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.70), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.22, 0.68, 0, 1.0);
-            z-index: 10;
-        }
-
-        .engine-popup.show {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateX(-50%) scale(1) translateY(0);
-        }
-
-        .engine-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 28px;
-            color: rgba(255, 255, 255, 0.70);
-            font-weight: 400;
-            font-size: 15px;
-            letter-spacing: 0.04em;
-            cursor: pointer;
-            transition: background 0.2s ease, color 0.2s ease;
-            border: none;
-            background: transparent;
-            width: 100%;
-            text-align: left;
-            font-family: inherit;
-        }
-
-        .engine-item:hover {
-            background: rgba(255, 255, 255, 0.06);
-            color: #ffffff;
-        }
-
-        .engine-item .check {
-            margin-left: auto;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            font-size: 14px;
-            color: #8a9cf0;
-        }
-
-        .engine-item.active .check {
-            opacity: 1;
-        }
-
-        .engine-item .logo {
-            font-size: 18px;
-            line-height: 1;
-            width: 28px;
-            text-align: center;
-        }
-
-        .popup-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9;
-            background: transparent;
-            pointer-events: none;
-            transition: background 0.3s ease;
-        }
-
-        .popup-overlay.show {
-            pointer-events: auto;
-            background: rgba(0, 0, 0, 0.15);
-        }
-
-        /* ========== 弹窗 ========== */
-        .shortcut-modal-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 999;
-            background: rgba(0, 0, 0, 0.50);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.25s ease;
-        }
-
-        .shortcut-modal-overlay.show {
-            display: flex;
-        }
-
-        .shortcut-modal {
-            background: rgba(24, 24, 48, 0.92);
-            backdrop-filter: blur(28px) saturate(1.6);
-            -webkit-backdrop-filter: blur(28px) saturate(1.6);
-            border-radius: 24px;
-            padding: 28px 24px 24px;
-            width: 90%;
-            max-width: 400px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.70);
-            animation: scaleIn 0.3s cubic-bezier(0.22, 0.68, 0, 1.0);
-        }
-
-        .shortcut-modal h3 {
-            font-size: 20px;
-            font-weight: 500;
-            margin-bottom: 2px;
-            letter-spacing: 0.04em;
-            color: #ffffff;
-        }
-
-        .shortcut-modal .modal-sub {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.35);
-            margin-bottom: 18px;
-            font-weight: 300;
-        }
-
-        .shortcut-modal label {
-            display: block;
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.50);
-            margin-bottom: 4px;
-            font-weight: 400;
-            letter-spacing: 0.04em;
-        }
-
-        .shortcut-modal input {
-            width: 100%;
-            padding: 12px 16px;
+            line-height: 1.8;
             margin-bottom: 12px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            color: #ffffff;
-            font-size: 15px;
-            outline: none;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            font-family: inherit;
         }
 
-        .shortcut-modal input:focus {
-            border-color: rgba(102, 126, 234, 0.50);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.08);
+        .section .text-block .feature-badge {
+            display: inline-block;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            letter-spacing: 0.04em;
+            margin-right: 6px;
+            margin-bottom: 6px;
         }
 
-        .shortcut-modal input::placeholder {
-            color: rgba(255, 255, 255, 0.20);
-        }
-
-        .shortcut-modal .modal-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 4px;
-        }
-
-        .shortcut-modal .modal-actions button {
+        .section .image-block {
             flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            font-family: inherit;
+            min-width: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 120px;
+        }
+
+        .section .image-block img {
+            max-width: 100%;
+            max-height: clamp(160px, 40vh, 320px);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 12px 40px var(--shadow-color);
+            background: var(--bg-card);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.4s ease;
+            object-fit: contain;
+        }
+
+        .section .image-block img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 60px var(--shadow-color);
+        }
+
+        .section .image-block .img-placeholder {
+            display: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            padding: 20px;
+            text-align: center;
+            border: 1px dashed var(--border-color);
+            border-radius: 20px;
+            width: 100%;
+        }
+
+        .section .image-block img.error + .img-placeholder {
+            display: block;
+        }
+        .section .image-block img.error {
+            display: none;
+        }
+
+        /* ========== 底部号召 ========== */
+        .cta-section {
+            text-align: center;
+            margin: 60px 0 40px;
+            animation: fadeUp 0.8s ease-out both;
+            animation-delay: 0.2s;
+        }
+
+        .cta-section h2 {
+            font-size: 24px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
             letter-spacing: 0.04em;
         }
 
-        .shortcut-modal .btn-cancel {
-            background: rgba(255, 255, 255, 0.06);
-            color: rgba(255, 255, 255, 0.50);
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+        }
+        .btn-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.btn .small {
+    display: block;
+    margin-left: 0;
+}
+        .btn {
+            display: inline-block;
+            padding: 14px 36px;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: transform 0.25s ease, box-shadow 0.3s ease, background 0.3s ease;
+            letter-spacing: 0.04em;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            box-sizing: border-box;
         }
 
-        .shortcut-modal .btn-cancel:hover {
-            background: rgba(255, 255, 255, 0.10);
+        .btn-primary {
+            background: var(--gradient-btn);
             color: #ffffff;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.25);
+        }
+        .btn-primary:hover {
+            transform: scale(1.04);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.35);
         }
 
-        .shortcut-modal .btn-save {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: #ffffff;
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.25);
+        .btn-secondary {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+            transform: scale(1.04);
+            color: var(--text-primary);
         }
 
-        .shortcut-modal .btn-save:hover {
-            transform: scale(1.02);
-            box-shadow: 0 6px 28px rgba(102, 126, 234, 0.35);
+        .btn .small {
+            font-size: 12px;
+            font-weight: 300;
+            opacity: 0.60;
+            display: block;
+            margin-top: 2px;
+            white-space: normal;
         }
 
-        .shortcut-modal .btn-save:active {
-            transform: scale(0.97);
+        /* ========== 安装说明 ========== */
+        .install-note {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px 24px;
+            max-width: 560px;
+            margin: 0 auto 32px;
+            animation: fadeUp 0.8s ease-out both;
+            animation-delay: 0.3s;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .install-note p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        .install-note code {
+            background: var(--bg-card);
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-primary);
+            font-family: inherit;
+            border: 1px solid var(--border-color);
+        }
+
+        /* ========== 页脚 ========== */
+        .footer {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            padding-top: 24px;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+            animation: fadeUp 0.8s ease-out both;
+            animation-delay: 0.4s;
+        }
+        .footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer a:hover {
+            color: var(--text-secondary);
+        }
+        .footer .divider {
+            margin: 0 10px;
+            opacity: 0.20;
+        }
+        .footer .easter-egg {
+            opacity: 0.50;
+            transition: opacity 0.4s ease;
+        }
+        .footer .easter-egg:hover {
+            opacity: 1;
         }
 
         /* ========== 动画 ========== */
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes scaleIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.92) translateY(16px);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
         @keyframes fadeUp {
             0% {
                 opacity: 0;
-                transform: translateY(16px);
+                transform: translateY(30px);
             }
             100% {
                 opacity: 1;
@@ -790,167 +521,53 @@
         }
 
         /* ========== 响应式 ========== */
-        @media (max-width: 640px) {
-            .search-box {
-                padding: 4px 4px 4px 16px;
-                border-radius: 48px;
-            }
-            .search-input {
-                padding: 12px 10px 12px 8px;
-                font-size: 15px;
-            }
-            .search-btn {
-                padding: 8px 16px;
-                font-size: 13px;
-            }
-            .search-icon {
-                width: 17px;
-                height: 17px;
-            }
-            .date {
-                font-size: 12px;
-                padding: 2px 12px;
-            }
-            .glow--1 {
-                width: 80vw;
-                height: 80vw;
-            }
-            .glow--2 {
-                width: 70vw;
-                height: 70vw;
-            }
-            .glow--3 {
-                width: 60vw;
-                height: 60vw;
-            }
-            .time-section {
-                margin-bottom: 8px;
-            }
-            .search-section {
-                margin-bottom: 8px;
-            }
+        @media (max-width: 768px) {
             .container {
-                padding: 0 16px 70px 16px;
+                padding: 40px 16px 30px;
             }
-            .engine-popup {
-                min-width: 170px;
-                bottom: 72px;
+            .header {
+                margin-bottom: 40px;
             }
-            .engine-item {
-                padding: 10px 20px;
-                font-size: 14px;
+            .section {
+                flex-direction: column !important;
+                padding: 28px 20px;
+                gap: 30px;
+                margin-bottom: 40px;
             }
-            .history-dropdown {
-                max-height: 180px;
+            .section .image-block img {
+                max-height: 200px;
             }
-            .history-item {
-                padding: 8px 16px;
-                font-size: 14px;
+            .section .text-block h2 {
+                font-size: 26px;
             }
-            .shortcut-item {
-                padding: 5px 8px;
-                min-width: 44px;
+            .btn {
+                padding: 12px 24px;
+                font-size: 15px;
+                width: 100%;
+                max-width: 100%;
+                white-space: normal;
+                text-align: center;
             }
-            .shortcut-item .shortcut-icon {
-                width: 26px;
-                height: 26px;
-            }
-            .shortcut-item .shortcut-name {
-                font-size: 9px;
-                max-width: 44px;
-            }
-            .shortcuts-add-btn {
-                padding: 5px 8px;
-                min-width: 44px;
-            }
-            .shortcuts-add-btn .add-icon {
-                font-size: 18px;
-            }
-            .footer-trigger {
-                font-size: 13px;
-                padding: 4px 14px;
-            }
-            .footer {
-                bottom: 22px;
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
             }
         }
 
         @media (max-width: 420px) {
-            .search-btn {
-                padding: 6px 12px;
-                font-size: 12px;
+            .header h1 {
+                font-size: 36px;
             }
-            .search-input {
-                padding: 10px 6px 10px 6px;
-                font-size: 14px;
+            .section {
+                padding: 20px 16px;
+                gap: 20px;
             }
-            .search-box {
-                padding: 3px 3px 3px 12px;
+            .section .text-block h2 {
+                font-size: 22px;
             }
-            .search-icon {
-                width: 15px;
-                height: 15px;
-            }
-            .time {
-                font-size: 42px;
-            }
-            .time-section {
-                margin-bottom: 6px;
-            }
-            .search-section {
-                margin-bottom: 6px;
-            }
-            .container {
-                padding: 0 12px 60px 12px;
-            }
-            .engine-popup {
-                min-width: 150px;
-                bottom: 66px;
-            }
-            .engine-item {
-                padding: 8px 16px;
-                font-size: 13px;
-            }
-            .history-dropdown {
+            .section .image-block img {
                 max-height: 150px;
             }
-            .history-item {
-                padding: 6px 14px;
-                font-size: 13px;
-            }
-            .shortcuts-grid {
-                gap: 6px;
-            }
-            .shortcut-item {
-                padding: 4px 6px;
-                min-width: 38px;
-            }
-            .shortcut-item .shortcut-icon {
-                width: 22px;
-                height: 22px;
-            }
-            .shortcut-item .shortcut-name {
-                font-size: 8px;
-                max-width: 34px;
-            }
-            .shortcuts-add-btn {
-                padding: 4px 6px;
-                min-width: 38px;
-            }
-            .shortcuts-add-btn .add-icon {
-                font-size: 16px;
-            }
-            .footer-trigger {
-                font-size: 12px;
-                padding: 4px 12px;
-            }
-            .footer {
-                bottom: 18px;
-            }
-        }
-
-        ::-webkit-scrollbar {
-            display: none;
         }
     </style>
 </head>
@@ -963,97 +580,170 @@
         <div class="glow glow--3"></div>
     </div>
 
-    <!-- ===== 主内容 ===== -->
+    <!-- ===== 内容容器 ===== -->
     <div class="container">
 
-        <div class="content-wrapper">
-            <!-- 时间 -->
-            <div class="time-section">
-                <div class="time" id="time">--:--:--</div>
-                <div class="date" id="date">----年--月--日 星期-</div>
-            </div>
+        <!-- ===== 头部 ===== -->
+        <header class="header">
+            <div class="badge">✦ 极光系 · 开篇之作</div>
+            <h1>极光起始页</h1>
+            <p class="subtitle">
+                把新标签页变回 <strong>原来的样子</strong>
+            </p>
+        </header>
 
-            <!-- 搜索 -->
-            <div class="search-section">
-                <form id="searchForm" action="https://www.bing.com/search" method="get" target="_blank" autocomplete="off">
-                    <div class="search-box">
-                        <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                        </svg>
-                        <input
-                        class="search-input"
-                        id="searchInput"
-                        type="text"
-                        name="q"
-                        placeholder="在 Bing 中搜索…"
-                        autofocus
-                        aria-label="搜索框"
-                        autocomplete="off"
-                        />
-                        <button class="search-btn" type="submit">搜索</button>
-                    </div>
-                </form>
-
-                <div class="history-dropdown" id="historyDropdown"></div>
+        <!-- ===== 段落 1：极光之美 ===== -->
+        <section class="section">
+            <div class="text-block">
+                <div class="label">✦ 极光美学</div>
+                <h2>极光般的视觉盛宴</h2>
+                <p>
+                    打开浏览器，不再是呆板的空白或杂乱的信息流。<br />
+                    柔和的彩色光晕在背景中缓缓流动，每一帧都不同。<br />
+                    时间、日期、搜索框，简洁地浮在极光之上——<br />
+                    这就是你的新标签页。
+                </p>
+                <span class="feature-badge">动态极光</span>
+                <span class="feature-badge">实时时钟</span>
+                <span class="feature-badge">纯净界面</span>
             </div>
-
-            <!-- 快捷链接 -->
-            <div class="shortcuts-section">
-                <div class="shortcuts-grid" id="shortcutsGrid">
-                    <!-- 由 JS 动态渲染 -->
-                </div>
+            <div class="image-block">
+                <img src="images/aurora-screenshot.png" alt="极光起始页截图" onerror="this.classList.add('error'); this.nextElementSibling.style.display='block'" />
+                <div class="img-placeholder">📷 极光起始页截图</div>
             </div>
-        </div>
+        </section>
+
+        <!-- ===== 段落 2：开源自由 ===== -->
+        <section class="section">
+            <div class="text-block">
+                <div class="label">📖 开源精神</div>
+                <h2>源码可见 · 自由修改</h2>
+                <p>
+                    代码完全开源，基于 <strong>GPL v3</strong> 协议。<br />
+                    你可以审阅每一行代码，也可以 fork 后自己修改、定制。<br />
+                    不受闭源软件的束缚，数据只留在你本地。<br />
+                    自由，不是嘴上说的，是写在 LICENSE 里的。
+                </p>
+                <span class="feature-badge">GPL v3</span>
+                <span class="feature-badge">无后门</span>
+                <span class="feature-badge">纯本地</span>
+            </div>
+            <div class="image-block">
+                <img src="images/open-source.png" alt="开源协议示意" onerror="this.classList.add('error'); this.nextElementSibling.style.display='block'" />
+                <div class="img-placeholder">📷 开源协议示意</div>
+            </div>
+        </section>
+
+        <!-- ===== 段落 3：对比友商 ===== -->
+        <section class="section">
+            <div class="text-block">
+                <div class="label">⚔️ 为何不同</div>
+                <h2>比原生更灵活，比闭源更安全</h2>
+                <p>
+                    <strong>Edge 自带</strong> —— 简约，但微软式中文很绕弯子。<br />
+                    <strong>360 主页</strong> —— 广告多、推荐流杂乱，打开慢。<br />
+                    <strong>青柠起始页</strong> —— 设计好，但自定义必须登录。<br />
+                    极光起始页：<strong>开源 + 美观 + 轻量</strong>，你的浏览器你做主。
+                </p>
+                <span class="feature-badge">无广告</span>
+                <span class="feature-badge">不追踪</span>
+                <span class="feature-badge">轻量快速</span>
+            </div>
+            <div class="image-block">
+                <img src="images/comparison.png" alt="与友商对比图" onerror="this.classList.add('error'); this.nextElementSibling.style.display='block'" />
+                <div class="img-placeholder">📷 友商对比图</div>
+            </div>
+        </section>
+
+        <!-- ===== 段落 4：定制能力 ===== -->
+        <section class="section">
+            <div class="text-block">
+                <div class="label">🛠️ 定制自由</div>
+                <h2>你的起始页，你做主</h2>
+                <p>
+                    四引擎搜索（Bing · 百度 · Yandex · Google）一键切换。<br />
+                    自定义快捷链接，自动获取网站图标。<br />
+                    上传自己的图片作为背景，极光光晕叠加其上。<br />
+                    搜索历史本地保存，点击复用，随时清空。<br />
+                    每一个细节，都按你的习惯来。
+                </p>
+                <span class="feature-badge">四引擎</span>
+                <span class="feature-badge">自定义背景</span>
+                <span class="feature-badge">快捷链接</span>
+            </div>
+            <div class="image-block">
+                <img src="images/customization.png" alt="自定义功能截图" onerror="this.classList.add('error'); this.nextElementSibling.style.display='block'" />
+                <div class="img-placeholder">📷 自定义功能截图</div>
+            </div>
+        </section>
+
+        <!-- ===== 段落 5：社区与支持 ===== -->
+        <section class="section">
+            <div class="text-block">
+                <div class="label">💬 社区驱动</div>
+                <h2>一起让极光更好</h2>
+                <p>
+                    项目已开源，接受 Issue 和 Pull Request。<br />
+                    你可以在 GitHub 上反馈 bug、提出新功能想法，<br />
+                    甚至直接贡献代码。<br />
+                    一个独立开发者 + 一群热心的用户 = 更好的极光。
+                </p>
+                <span class="feature-badge">GitHub</span>
+                <span class="feature-badge">GitCode</span>
+                <span class="feature-badge">开源社区</span>
+            </div>
+            <div class="image-block">
+                <img src="images/community.png" alt="社区支持" onerror="this.classList.add('error'); this.nextElementSibling.style.display='block'" />
+                <div class="img-placeholder">📷 社区支持</div>
+            </div>
+        </section>
+
+        <!-- ===== 下载号召 ===== -->
+        <div class="btn-group">
+
+    <!-- GitHub -->
+    <a href="https://github.com/Bili481736023/aurora-start/releases" target="_blank" class="btn btn-primary">
+        <svg class="btn-icon" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        GitHub 下载
+        <span class="small">.zip / .crx</span>
+    </a>
+
+    <!-- GitCode -->
+    <a href="https://gitcode.com/2601_96127424/aurora-start/releases" target="_blank" class="btn btn-secondary">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+        </svg>
+        GitCode 下载
+        <span class="small">国内镜像</span>
+    </a>
+
+    <!-- Star -->
+    <a href="https://github.com/Bili481736023/aurora-start" target="_blank" class="btn btn-secondary">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>
+        点个 Star
+    </a>
+
+</div>
+
+        <!-- ===== 页脚 ===== -->
+        <footer class="footer">
+            <span>© 2026 极光起始页 · Aurora Start</span>
+            <span class="divider">·</span>
+            <span>GPL v3 开源协议</span>
+            <span class="divider">·</span>
+            <a href="https://github.com/Bili481736023/aurora-start" target="_blank">GitHub</a>
+            <span class="divider">·</span>
+            <a href="https://gitcode.com/2601_96127424/aurora-start" target="_blank">GitCode</a>
+            <br />
+        </footer>
 
     </div>
-
-    <!-- ===== 页脚 - 搜索引擎选择 ===== -->
-    <div class="footer">
-        <span class="footer-trigger" id="engineTrigger">
-            <span id="currentEngineLabel">✦ &nbsp;Bing</span>
-            <span class="icon-arrow">▾</span>
-        </span>
-    </div>
-
-    <!-- ===== 搜索引擎弹出面板 ===== -->
-    <div class="popup-overlay" id="popupOverlay"></div>
-    <div class="engine-popup" id="enginePopup" role="menu">
-        <button class="engine-item active" data-engine="bing" data-url="https://www.bing.com/search" data-placeholder="在 Bing 中搜索…">
-            <span class="logo">🔍</span> Bing
-            <span class="check">✓</span>
-        </button>
-        <button class="engine-item" data-engine="baidu" data-url="https://www.baidu.com/s" data-placeholder="在 百度 中搜索…">
-            <span class="logo">🌐</span> 百度
-            <span class="check">✓</span>
-        </button>
-        <button class="engine-item" data-engine="yandex" data-url="https://yandex.com/search/" data-placeholder="在 Yandex 中搜索…">
-            <span class="logo">🌍</span> Yandex
-            <span class="check">✓</span>
-        </button>
-        <button class="engine-item" data-engine="google" data-url="https://www.google.com/search" data-placeholder="在 Google 中搜索…">
-            <span class="logo">🔴</span> Google
-            <span class="check">✓</span>
-        </button>
-    </div>
-
-    <!-- ===== 添加链接弹窗 ===== -->
-    <div class="shortcut-modal-overlay" id="shortcutModal">
-        <div class="shortcut-modal">
-            <h3>➕ 添加快捷链接</h3>
-            <div class="modal-sub">输入名称和网址，保存后立刻出现在下方</div>
-            <label>网站名称</label>
-            <input type="text" id="shortcutNameInput" placeholder="例如：B站" maxlength="20" />
-            <label>网址</label>
-            <input type="url" id="shortcutUrlInput" placeholder="https://bilibili.com" />
-            <div class="modal-actions">
-                <button class="btn-cancel" id="shortcutCancelBtn">取消</button>
-                <button class="btn-save" id="shortcutSaveBtn">保存</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
 
 </body>
 </html>
