@@ -22,7 +22,16 @@
     const cancelBtn = document.getElementById('shortcutCancelBtn');
     const saveBtn = document.getElementById('shortcutSaveBtn');
 
+    const bgLayer = document.getElementById('bgLayer');
+    const bgToggleBtn = document.getElementById('bgToggleBtn');
+    const bgModal = document.getElementById('bgModal');
+    const bgUploadBtn = document.getElementById('bgUploadBtn');
+    const bgResetBtn = document.getElementById('bgResetBtn');
+    const bgModalCloseBtn = document.getElementById('bgModalCloseBtn');
+    const bgFileInput = document.getElementById('bgFileInput');
+
     const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
+    const BG_STORAGE_KEY = 'customBackground';
 
     // ============================================================
     // 时钟
@@ -138,6 +147,7 @@
             if (popup.classList.contains('show')) closePopup();
             if (historyDropdown.classList.contains('show')) hideHistory();
             if (modal.classList.contains('show')) closeModal();
+            if (bgModal.classList.contains('show')) closeBgModal();
         }
     });
 
@@ -313,35 +323,74 @@
     function getFavicon(url) {
         try {
             const u = new URL(url);
-            return `https://www.google.com/s2/favicons?domain=${u.hostname}&sz=64`;
+            return `https://${u.hostname}/favicon.ico`;
         } catch (_) {
             return '';
         }
     }
 
+    function createShortcutIcon(url, name) {
+        const container = document.createElement('div');
+        container.style.cssText = 'position:relative;display:flex;align-items:center;justify-content:center;';
+
+        const img = document.createElement('img');
+        img.className = 'shortcut-icon';
+        img.src = getFavicon(url);
+        img.alt = name;
+        img.loading = 'lazy';
+
+        const fallback = document.createElement('span');
+        fallback.className = 'shortcut-fallback';
+        fallback.textContent = name.charAt(0).toUpperCase();
+        fallback.style.display = 'none';
+
+        img.onerror = function() {
+            this.style.display = 'none';
+            fallback.style.display = 'flex';
+        };
+
+        container.appendChild(img);
+        container.appendChild(fallback);
+        return container;
+    }
+
     function renderShortcuts() {
         const list = getShortcuts();
-        let html = '';
+        shortcutsGrid.innerHTML = '';
 
         list.forEach((item, index) => {
-            const icon = item.icon || getFavicon(item.url);
-            html += `
-                <a href="${item.url}" target="_blank" class="shortcut-item" data-index="${index}">
-                    <img class="shortcut-icon" src="${icon}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.style.display='none'" />
-                    <span class="shortcut-name">${escapeHtml(item.name)}</span>
-                    <span class="shortcut-delete" data-index="${index}">✕</span>
-                </a>
-            `;
+            const a = document.createElement('a');
+            a.href = item.url;
+            a.target = '_blank';
+            a.className = 'shortcut-item';
+            a.dataset.index = index;
+
+            const iconContainer = createShortcutIcon(item.url, item.name);
+            a.appendChild(iconContainer);
+
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'shortcut-name';
+            nameSpan.textContent = item.name;
+            a.appendChild(nameSpan);
+
+            const del = document.createElement('span');
+            del.className = 'shortcut-delete';
+            del.dataset.index = index;
+            del.textContent = '✕';
+            a.appendChild(del);
+
+            shortcutsGrid.appendChild(a);
         });
 
-        html += `
-            <div class="shortcuts-add-btn" id="addShortcutBtn">
-                <span class="add-icon">+</span>
-                <span>添加</span>
-            </div>
-        `;
-
-        shortcutsGrid.innerHTML = html;
+        const addBtn = document.createElement('div');
+        addBtn.className = 'shortcuts-add-btn';
+        addBtn.id = 'addShortcutBtn';
+        addBtn.innerHTML = `<span class="add-icon">+</span><span>添加</span>`;
+        addBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            openModal();
+        });
+        shortcutsGrid.appendChild(addBtn);
 
         shortcutsGrid.querySelectorAll('.shortcut-delete').forEach(btn => {
             btn.addEventListener('click', function(e) {
@@ -353,11 +402,6 @@
                 }
             });
         });
-
-        const addBtn = document.getElementById('addShortcutBtn');
-        if (addBtn) {
-            addBtn.addEventListener('click', openModal);
-        }
     }
 
     function deleteShortcut(index) {
@@ -386,7 +430,7 @@
         if (existing !== -1) {
             list[existing].name = name;
         } else {
-            list.push({ name, url, icon: getFavicon(url) });
+            list.push({ name, url });
         }
         saveShortcuts(list);
         renderShortcuts();
@@ -394,9 +438,15 @@
     }
 
     // ============================================================
-    // 弹窗控制
+    // 快捷链接弹窗控制
     // ============================================================
     function openModal() {
+        searchInput.blur();
+        hideHistory();
+        if (hideTimeout) {
+            clearTimeout(hideTimeout);
+            hideTimeout = null;
+        }
         nameInput.value = '';
         urlInput.value = '';
         modal.classList.add('show');
@@ -453,6 +503,76 @@
     });
 
     // ============================================================
+    // 自定义背景控制（右下角弹窗版）
+    // ============================================================
+
+    function openBgModal() {
+        bgModal.classList.add('show');
+    }
+
+    function closeBgModal() {
+        bgModal.classList.remove('show');
+    }
+
+    bgToggleBtn.addEventListener('click', openBgModal);
+    bgModalCloseBtn.addEventListener('click', closeBgModal);
+
+    bgModal.addEventListener('click', function(e) {
+        if (e.target === this) closeBgModal();
+    });
+
+    function loadCustomBackground() {
+        try {
+            const data = localStorage.getItem(BG_STORAGE_KEY);
+            if (data) {
+                bgLayer.style.backgroundImage = `url(${data})`;
+                bgLayer.style.backgroundSize = 'cover';
+                bgLayer.style.backgroundPosition = 'center';
+                bgLayer.classList.add('has-custom-bg');
+            }
+        } catch (_) {}
+    }
+
+    function saveCustomBackground(imageData) {
+        try {
+            localStorage.setItem(BG_STORAGE_KEY, imageData);
+            bgLayer.style.backgroundImage = `url(${imageData})`;
+            bgLayer.style.backgroundSize = 'cover';
+            bgLayer.style.backgroundPosition = 'center';
+            bgLayer.classList.add('has-custom-bg');
+            closeBgModal();
+        } catch (_) {}
+    }
+
+    function resetBackground() {
+        try {
+            localStorage.removeItem(BG_STORAGE_KEY);
+            bgLayer.style.backgroundImage = '';
+            bgLayer.style.backgroundSize = '';
+            bgLayer.style.backgroundPosition = '';
+            bgLayer.classList.remove('has-custom-bg');
+            closeBgModal();
+        } catch (_) {}
+    }
+
+    bgUploadBtn.addEventListener('click', function() {
+        bgFileInput.click();
+    });
+
+    bgFileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            saveCustomBackground(ev.target.result);
+            bgFileInput.value = '';
+        };
+        reader.readAsDataURL(file);
+    });
+
+    bgResetBtn.addEventListener('click', resetBackground);
+
+    // ============================================================
     // 恢复搜索引擎
     // ============================================================
     try {
@@ -467,6 +587,7 @@
     // ============================================================
     renderHistory();
     renderShortcuts();
+    loadCustomBackground();
 
-    console.log('✦ 极光起始页已加载 · v1.1.0 ✦');
+    console.log('✦ 极光起始页已加载 · v2.0.0 ✦');
 })();

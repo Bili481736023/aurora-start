@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>极光起始页 · Aurora Start</title>
     <style>
-        /* ========== 全局重置 & 基础 ========== */
+        /* ============================================================
+                   1. 全局重置 & 基础
+                   ============================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -22,103 +24,118 @@
             user-select: none;
         }
 
-        /* ========== 背景 - 动态光晕层 ========== */
+        /* ============================================================
+                   2. 背景层（极光 + 自定义图片）
+                   ============================================================ */
         .bg-layer {
             position: fixed;
             inset: 0;
             z-index: 0;
-            background: radial-gradient(ellipse at 20% 20%, rgba(102, 126, 234, 0.25) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 80%, rgba(118, 75, 162, 0.30) 0%, transparent 55%),
-                radial-gradient(ellipse at 50% 50%, rgba(251, 194, 235, 0.08) 0%, transparent 70%),
-                #0a0a1a;
-            animation: bgPulse 12s ease-in-out infinite alternate;
+            background: #0a0a1a;
+            overflow: hidden;
+            transition: background-image 0.8s ease;
         }
 
-        .glow {
+        .bg-layer.has-custom-bg {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .bg-layer.has-custom-bg .aurora-container {
+            opacity: 0.6;
+        }
+
+        .aurora-container {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+            transition: opacity 0.8s ease;
+        }
+
+        /* 5层光晕 */
+        .aurora {
             position: absolute;
             border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.5;
-            pointer-events: none;
-            will-change: transform;
+            filter: blur(80px);
+            opacity: 0.6;
+            will-change: transform, opacity;
         }
-        .glow--1 {
+        .aurora--1 {
+            width: 80vw;
+            height: 80vw;
+            top: -20%;
+            left: -20%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.50), transparent 70%);
+            animation: auroraFloat1 16s ease-in-out infinite alternate;
+        }
+        .aurora--2 {
+            width: 70vw;
+            height: 70vw;
+            bottom: -15%;
+            right: -15%;
+            background: radial-gradient(circle, rgba(118, 75, 162, 0.55), transparent 70%);
+            animation: auroraFloat2 20s ease-in-out infinite alternate;
+        }
+        .aurora--3 {
             width: 60vw;
             height: 60vw;
-            top: -10%;
-            left: -10%;
-            background: radial-gradient(circle, rgba(102, 126, 234, 0.50), transparent 70%);
-            animation: floatGlow1 18s ease-in-out infinite alternate;
+            top: 30%;
+            left: 50%;
+            background: radial-gradient(circle, rgba(251, 194, 235, 0.30), transparent 70%);
+            animation: auroraFloat3 22s ease-in-out infinite alternate;
         }
-        .glow--2 {
+        .aurora--4 {
             width: 50vw;
             height: 50vw;
-            bottom: -5%;
-            right: -5%;
-            background: radial-gradient(circle, rgba(118, 75, 162, 0.55), transparent 70%);
-            animation: floatGlow2 20s ease-in-out infinite alternate;
+            top: 10%;
+            right: 10%;
+            background: radial-gradient(circle, rgba(64, 224, 208, 0.20), transparent 70%);
+            animation: auroraFloat4 18s ease-in-out infinite alternate;
         }
-        .glow--3 {
-            width: 40vw;
-            height: 40vw;
-            top: 40%;
-            left: 30%;
-            background: radial-gradient(circle, rgba(251, 194, 235, 0.20), transparent 70%);
-            animation: floatGlow3 22s ease-in-out infinite alternate;
-        }
-
-        @keyframes bgPulse {
-            0% {
-                opacity: 0.8;
-            }
-            100% {
-                opacity: 1;
-            }
+        .aurora--5 {
+            width: 65vw;
+            height: 65vw;
+            bottom: 20%;
+            left: 10%;
+            background: radial-gradient(circle, rgba(255, 107, 107, 0.15), transparent 70%);
+            animation: auroraFloat5 24s ease-in-out infinite alternate;
         }
 
-        @keyframes floatGlow1 {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            33% {
-                transform: translate(8%, 5%) scale(1.1);
-            }
-            66% {
-                transform: translate(-3%, 10%) scale(0.9);
-            }
-            100% {
-                transform: translate(5%, -5%) scale(1.05);
-            }
+        @keyframes auroraFloat1 {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+            50% { transform: translate(15%, -10%) scale(1.2); opacity: 0.7; }
+            100% { transform: translate(-10%, 15%) scale(0.9); opacity: 0.5; }
+        }
+        @keyframes auroraFloat2 {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            50% { transform: translate(-15%, 10%) scale(1.3); opacity: 0.8; }
+            100% { transform: translate(10%, -15%) scale(0.85); opacity: 0.4; }
+        }
+        @keyframes auroraFloat3 {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            50% { transform: translate(10%, -20%) scale(1.4); opacity: 0.6; }
+            100% { transform: translate(-20%, 10%) scale(0.8); opacity: 0.3; }
+        }
+        @keyframes auroraFloat4 {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+            50% { transform: translate(-25%, 5%) scale(1.5); opacity: 0.5; }
+            100% { transform: translate(15%, -20%) scale(0.7); opacity: 0.2; }
+        }
+        @keyframes auroraFloat5 {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.15; }
+            50% { transform: translate(20%, 15%) scale(1.6); opacity: 0.4; }
+            100% { transform: translate(-15%, -10%) scale(0.75); opacity: 0.15; }
         }
 
-        @keyframes floatGlow2 {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            50% {
-                transform: translate(-8%, -10%) scale(1.15);
-            }
-            100% {
-                transform: translate(10%, 8%) scale(0.9);
-            }
-        }
-
-        @keyframes floatGlow3 {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            50% {
-                transform: translate(10%, -8%) scale(1.2);
-            }
-            100% {
-                transform: translate(-10%, 12%) scale(0.85);
-            }
-        }
-
-        /* ========== 内容容器 - 紧凑垂直布局 ========== */
+        /* ============================================================
+                   3. 主内容容器
+                   ============================================================ */
         .container {
             position: relative;
-            z-index: 1;
+            z-index: 2;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -139,7 +156,9 @@
             margin-top: -20px;
         }
 
-        /* ========== 时间 ========== */
+        /* ============================================================
+                   4. 时间
+                   ============================================================ */
         .time-section {
             text-align: center;
             width: 100%;
@@ -173,7 +192,9 @@
             border: 1px solid rgba(255, 255, 255, 0.04);
         }
 
-        /* ========== 搜索区域 ========== */
+        /* ============================================================
+                   5. 搜索区域
+                   ============================================================ */
         .search-section {
             width: 100%;
             position: relative;
@@ -266,15 +287,17 @@
             opacity: 0.80;
         }
 
-        /* ========== 历史下拉 ========== */
+        /* ============================================================
+                   6. 历史下拉（毛玻璃）
+                   ============================================================ */
         .history-dropdown {
             position: absolute;
             top: calc(100% + 12px);
             left: 0;
             right: 0;
-            background: rgba(20, 20, 40, 0.80);
-            backdrop-filter: blur(24px) saturate(1.6);
-            -webkit-backdrop-filter: blur(24px) saturate(1.6);
+            background: rgba(0, 0, 0, 0.30);
+            backdrop-filter: blur(24px) saturate(1.4);
+            -webkit-backdrop-filter: blur(24px) saturate(1.4);
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.60);
@@ -346,7 +369,6 @@
         .history-item .history-delete:hover {
             opacity: 0.8;
         }
-
         .history-empty {
             padding: 20px;
             text-align: center;
@@ -354,7 +376,6 @@
             font-size: 14px;
             letter-spacing: 0.04em;
         }
-
         .history-actions {
             display: flex;
             justify-content: flex-end;
@@ -379,9 +400,12 @@
             color: rgba(255, 255, 255, 0.60);
         }
 
-        /* ========== 快捷链接 ========== */
+        /* ============================================================
+                   7. 快捷链接
+                   ============================================================ */
         .shortcuts-section {
             width: 100%;
+            margin-top: 16px;
             margin-bottom: 0;
         }
 
@@ -416,7 +440,6 @@
             position: relative;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.20);
         }
-
         .shortcut-item:hover {
             transform: translateY(-3px) scale(1.04);
             background: rgba(255, 255, 255, 0.10);
@@ -466,13 +489,11 @@
             pointer-events: none;
             font-weight: 600;
         }
-
         .shortcut-item:hover .shortcut-delete {
             opacity: 1;
             transform: scale(1);
             pointer-events: auto;
         }
-
         .shortcut-item .shortcut-delete:hover {
             background: rgba(255, 50, 50, 1);
             transform: scale(1.15);
@@ -494,153 +515,60 @@
             color: rgba(255, 255, 255, 0.30);
             font-size: 10px;
         }
-
         .shortcuts-add-btn:hover {
             background: rgba(255, 255, 255, 0.06);
             border-color: rgba(255, 255, 255, 0.30);
             color: rgba(255, 255, 255, 0.60);
             transform: scale(1.02);
         }
-
         .shortcuts-add-btn .add-icon {
             font-size: 20px;
             line-height: 1;
             font-weight: 300;
         }
 
-        /* ========== 页脚 - 搜索引擎选择（固定在底部） ========== */
-        .footer {
-            position: fixed;
-            bottom: 28px;
-            left: 0;
-            right: 0;
-            z-index: 1;
-            text-align: center;
-            animation: fadeUp 1.2s ease-out both;
-            animation-delay: 1.0s;
-        }
-
-        .footer-trigger {
-            display: inline-block;
-            cursor: pointer;
-            padding: 6px 18px;
-            border-radius: 40px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(4px);
-            transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-            user-select: none;
-            font-size: 14px;
-            font-weight: 300;
-            color: rgba(255, 255, 255, 0.25);
-            letter-spacing: 0.12em;
-        }
-
-        .footer-trigger:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.12);
-            color: rgba(255, 255, 255, 0.55);
-        }
-
-        .footer-trigger .icon-arrow {
-            display: inline-block;
-            margin-left: 6px;
-            font-size: 10px;
-            transition: transform 0.3s ease;
-        }
-
-        .footer-trigger.active .icon-arrow {
-            transform: rotate(180deg);
-        }
-
-        /* ===== 搜索引擎弹出面板 ===== */
-        .engine-popup {
+        /* ============================================================
+                   8. 右下角背景切换按钮
+                   ============================================================ */
+        .bg-toggle-btn {
             position: fixed;
             bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%) scale(0.92) translateY(12px);
-            background: rgba(20, 20, 40, 0.75);
-            backdrop-filter: blur(24px) saturate(1.6);
-            -webkit-backdrop-filter: blur(24px) saturate(1.6);
-            border-radius: 20px;
-            padding: 10px 0;
-            min-width: 200px;
+            right: 24px;
+            z-index: 10000;
+            /* 确保在所有弹窗之上，可点击 */
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.70), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.22, 0.68, 0, 1.0);
-            z-index: 10;
-        }
-
-        .engine-popup.show {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateX(-50%) scale(1) translateY(0);
-        }
-
-        .engine-item {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: rgba(255, 255, 255, 0.40);
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 28px;
-            color: rgba(255, 255, 255, 0.70);
-            font-weight: 400;
-            font-size: 15px;
-            letter-spacing: 0.04em;
-            cursor: pointer;
-            transition: background 0.2s ease, color 0.2s ease;
-            border: none;
-            background: transparent;
-            width: 100%;
-            text-align: left;
-            font-family: inherit;
-        }
-
-        .engine-item:hover {
-            background: rgba(255, 255, 255, 0.06);
-            color: #ffffff;
-        }
-
-        .engine-item .check {
-            margin-left: auto;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            font-size: 14px;
-            color: #8a9cf0;
-        }
-
-        .engine-item.active .check {
-            opacity: 1;
-        }
-
-        .engine-item .logo {
-            font-size: 18px;
-            line-height: 1;
-            width: 28px;
-            text-align: center;
-        }
-
-        .popup-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9;
-            background: transparent;
-            pointer-events: none;
-            transition: background 0.3s ease;
-        }
-
-        .popup-overlay.show {
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.30);
+            user-select: none;
             pointer-events: auto;
-            background: rgba(0, 0, 0, 0.15);
+        }
+        .bg-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.80);
+            transform: scale(1.08);
         }
 
-        /* ========== 弹窗 ========== */
-        .shortcut-modal-overlay {
+        /* ============================================================
+                   9. 所有弹窗的透明遮罩（统一样式）
+                   ============================================================ */
+        .shortcut-modal-overlay,
+        .bg-modal-overlay {
             position: fixed;
             inset: 0;
             z-index: 999;
-            background: rgba(0, 0, 0, 0.50);
+            background: transparent;
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
             display: none;
@@ -649,32 +577,48 @@
             animation: fadeIn 0.25s ease;
         }
 
-        .shortcut-modal-overlay.show {
+        .shortcut-modal-overlay.show,
+        .bg-modal-overlay.show {
             display: flex;
         }
 
-        .shortcut-modal {
-            background: rgba(24, 24, 48, 0.92);
-            backdrop-filter: blur(28px) saturate(1.6);
-            -webkit-backdrop-filter: blur(28px) saturate(1.6);
+        /* ============================================================
+                   10. 弹窗本体（毛玻璃 + 透出背景）
+                   ============================================================ */
+        .shortcut-modal,
+        .bg-modal {
+            background: rgba(0, 0, 0, 0.30);
+            backdrop-filter: blur(40px) saturate(1.4);
+            -webkit-backdrop-filter: blur(40px) saturate(1.4);
             border-radius: 24px;
-            padding: 28px 24px 24px;
-            width: 90%;
-            max-width: 400px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.70);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.60);
             animation: scaleIn 0.3s cubic-bezier(0.22, 0.68, 0, 1.0);
         }
 
-        .shortcut-modal h3 {
-            font-size: 20px;
-            font-weight: 500;
-            margin-bottom: 2px;
-            letter-spacing: 0.04em;
-            color: #ffffff;
+        .shortcut-modal {
+            padding: 28px 24px 24px;
+            width: 90%;
+            max-width: 400px;
         }
 
-        .shortcut-modal .modal-sub {
+        .bg-modal {
+            padding: 32px 28px 28px;
+            width: 90%;
+            max-width: 380px;
+        }
+
+        .shortcut-modal h3,
+        .bg-modal h3 {
+            font-size: 20px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 2px;
+            letter-spacing: 0.04em;
+        }
+
+        .shortcut-modal .modal-sub,
+        .bg-modal .bg-modal-sub {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.35);
             margin-bottom: 18px;
@@ -703,23 +647,24 @@
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
             font-family: inherit;
         }
-
         .shortcut-modal input:focus {
             border-color: rgba(102, 126, 234, 0.50);
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.08);
         }
-
         .shortcut-modal input::placeholder {
             color: rgba(255, 255, 255, 0.20);
         }
 
-        .shortcut-modal .modal-actions {
+        .shortcut-modal .modal-actions,
+        .bg-modal-actions {
             display: flex;
-            gap: 12px;
+            flex-direction: column;
+            gap: 10px;
             margin-top: 4px;
         }
 
-        .shortcut-modal .modal-actions button {
+        .shortcut-modal .modal-actions button,
+        .bg-modal-btn {
             flex: 1;
             padding: 12px;
             border: none;
@@ -730,66 +675,186 @@
             transition: all 0.25s ease;
             font-family: inherit;
             letter-spacing: 0.04em;
+            text-align: center;
         }
 
-        .shortcut-modal .btn-cancel {
-            background: rgba(255, 255, 255, 0.06);
+        .shortcut-modal .btn-cancel,
+        .bg-modal-btn.cancel {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.30);
+        }
+        .shortcut-modal .btn-cancel:hover,
+        .bg-modal-btn.cancel:hover {
+            background: rgba(255, 255, 255, 0.08);
             color: rgba(255, 255, 255, 0.50);
         }
 
-        .shortcut-modal .btn-cancel:hover {
-            background: rgba(255, 255, 255, 0.10);
-            color: #ffffff;
-        }
-
-        .shortcut-modal .btn-save {
+        .shortcut-modal .btn-save,
+        .bg-modal-btn.primary {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: #ffffff;
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.25);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.20);
         }
-
-        .shortcut-modal .btn-save:hover {
+        .shortcut-modal .btn-save:hover,
+        .bg-modal-btn.primary:hover {
             transform: scale(1.02);
-            box-shadow: 0 6px 28px rgba(102, 126, 234, 0.35);
+            box-shadow: 0 6px 28px rgba(102, 126, 234, 0.30);
         }
 
-        .shortcut-modal .btn-save:active {
-            transform: scale(0.97);
+        .bg-modal-btn.danger {
+            background: rgba(255, 70, 70, 0.10);
+            color: rgba(255, 100, 100, 0.60);
+            border: 1px solid rgba(255, 70, 70, 0.10);
+        }
+        .bg-modal-btn.danger:hover {
+            background: rgba(255, 70, 70, 0.20);
+            color: rgba(255, 100, 100, 0.90);
+            border-color: rgba(255, 70, 70, 0.20);
         }
 
-        /* ========== 动画 ========== */
+        /* ============================================================
+                   11. 页脚（搜索引擎切换）
+                   ============================================================ */
+        .footer {
+            position: fixed;
+            bottom: 28px;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            text-align: center;
+            animation: fadeUp 1.2s ease-out both;
+            animation-delay: 1.0s;
+        }
+
+        .footer-trigger {
+            display: inline-block;
+            cursor: pointer;
+            padding: 6px 18px;
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(4px);
+            transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+            user-select: none;
+            font-size: 14px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.25);
+            letter-spacing: 0.12em;
+        }
+        .footer-trigger:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.55);
+        }
+        .footer-trigger .icon-arrow {
+            display: inline-block;
+            margin-left: 6px;
+            font-size: 10px;
+            transition: transform 0.3s ease;
+        }
+        .footer-trigger.active .icon-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* ============================================================
+                   12. 搜索引擎弹出面板
+                   ============================================================ */
+        .engine-popup {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.92) translateY(12px);
+            background: rgba(20, 20, 40, 0.75);
+            backdrop-filter: blur(24px) saturate(1.6);
+            -webkit-backdrop-filter: blur(24px) saturate(1.6);
+            border-radius: 20px;
+            padding: 10px 0;
+            min-width: 200px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.70), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.22, 0.68, 0, 1.0);
+            z-index: 10;
+        }
+        .engine-popup.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) scale(1) translateY(0);
+        }
+
+        .engine-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 28px;
+            color: rgba(255, 255, 255, 0.70);
+            font-weight: 400;
+            font-size: 15px;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+        }
+        .engine-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #ffffff;
+        }
+        .engine-item .check {
+            margin-left: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 14px;
+            color: #8a9cf0;
+        }
+        .engine-item.active .check {
+            opacity: 1;
+        }
+        .engine-item .logo {
+            font-size: 18px;
+            line-height: 1;
+            width: 28px;
+            text-align: center;
+        }
+
+        .popup-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9;
+            background: transparent;
+            pointer-events: none;
+            transition: background 0.3s ease;
+        }
+        .popup-overlay.show {
+            pointer-events: auto;
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        /* ============================================================
+                   13. 动画
+                   ============================================================ */
         @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
 
         @keyframes scaleIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.92) translateY(16px);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
+            0% { opacity: 0; transform: scale(0.92) translateY(16px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         @keyframes fadeUp {
-            0% {
-                opacity: 0;
-                transform: translateY(16px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(16px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* ========== 响应式 ========== */
+        /* ============================================================
+                   14. 响应式
+                   ============================================================ */
         @media (max-width: 640px) {
             .search-box {
                 padding: 4px 4px 4px 16px;
@@ -811,17 +876,25 @@
                 font-size: 12px;
                 padding: 2px 12px;
             }
-            .glow--1 {
+            .aurora--1 {
                 width: 80vw;
                 height: 80vw;
             }
-            .glow--2 {
+            .aurora--2 {
                 width: 70vw;
                 height: 70vw;
             }
-            .glow--3 {
+            .aurora--3 {
                 width: 60vw;
                 height: 60vw;
+            }
+            .aurora--4 {
+                width: 50vw;
+                height: 50vw;
+            }
+            .aurora--5 {
+                width: 65vw;
+                height: 65vw;
             }
             .time-section {
                 margin-bottom: 8px;
@@ -872,6 +945,17 @@
             }
             .footer {
                 bottom: 22px;
+            }
+            .bg-toggle-btn {
+                bottom: 70px;
+                right: 16px;
+                width: 42px;
+                height: 42px;
+                font-size: 18px;
+            }
+            .shortcut-modal,
+            .bg-modal {
+                padding: 24px 20px 20px;
             }
         }
 
@@ -947,6 +1031,13 @@
             .footer {
                 bottom: 18px;
             }
+            .bg-toggle-btn {
+                bottom: 60px;
+                right: 12px;
+                width: 38px;
+                height: 38px;
+                font-size: 16px;
+            }
         }
 
         ::-webkit-scrollbar {
@@ -956,16 +1047,19 @@
 </head>
 <body>
 
-    <!-- ===== 背景光晕 ===== -->
-    <div class="bg-layer" aria-hidden="true">
-        <div class="glow glow--1"></div>
-        <div class="glow glow--2"></div>
-        <div class="glow glow--3"></div>
+    <!-- ===== 背景层 ===== -->
+    <div class="bg-layer" id="bgLayer">
+        <div class="aurora-container" id="auroraContainer">
+            <div class="aurora aurora--1"></div>
+            <div class="aurora aurora--2"></div>
+            <div class="aurora aurora--3"></div>
+            <div class="aurora aurora--4"></div>
+            <div class="aurora aurora--5"></div>
+        </div>
     </div>
 
     <!-- ===== 主内容 ===== -->
     <div class="container">
-
         <div class="content-wrapper">
             <!-- 时间 -->
             <div class="time-section">
@@ -981,34 +1075,40 @@
                             <circle cx="11" cy="11" r="8" />
                             <line x1="21" y1="21" x2="16.65" y2="16.65" />
                         </svg>
-                        <input
-                        class="search-input"
-                        id="searchInput"
-                        type="text"
-                        name="q"
-                        placeholder="在 Bing 中搜索…"
-                        autofocus
-                        aria-label="搜索框"
-                        autocomplete="off"
-                        />
+                        <input class="search-input" id="searchInput" type="text" name="q" placeholder="在 Bing 中搜索…" autofocus aria-label="搜索框" autocomplete="off" />
                         <button class="search-btn" type="submit">搜索</button>
                     </div>
                 </form>
-
                 <div class="history-dropdown" id="historyDropdown"></div>
             </div>
 
             <!-- 快捷链接 -->
             <div class="shortcuts-section">
-                <div class="shortcuts-grid" id="shortcutsGrid">
-                    <!-- 由 JS 动态渲染 -->
-                </div>
+                <div class="shortcuts-grid" id="shortcutsGrid"></div>
             </div>
         </div>
-
     </div>
 
-    <!-- ===== 页脚 - 搜索引擎选择 ===== -->
+    <!-- ===== 右下角 - 背景切换按钮 ===== -->
+    <button class="bg-toggle-btn" id="bgToggleBtn" aria-label="更换背景">🖼️</button>
+
+    <!-- ===== 背景切换弹窗 ===== -->
+    <div class="bg-modal-overlay" id="bgModal">
+        <div class="bg-modal">
+            <h3>🖼️ 更换背景</h3>
+            <p class="bg-modal-sub">上传一张图片作为背景，极光会叠加在上面</p>
+            <div class="bg-modal-actions">
+                <button class="bg-modal-btn primary" id="bgUploadBtn">📁 选择图片</button>
+                <button class="bg-modal-btn danger" id="bgResetBtn">↺ 恢复极光</button>
+                <button class="bg-modal-btn cancel" id="bgModalCloseBtn">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 隐藏的文件选择器 ===== -->
+    <input type="file" id="bgFileInput" accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml" style="display:none" />
+
+    <!-- ===== 页脚 - 搜索引擎切换 ===== -->
     <div class="footer">
         <span class="footer-trigger" id="engineTrigger">
             <span id="currentEngineLabel">✦ &nbsp;Bing</span>
@@ -1020,28 +1120,24 @@
     <div class="popup-overlay" id="popupOverlay"></div>
     <div class="engine-popup" id="enginePopup" role="menu">
         <button class="engine-item active" data-engine="bing" data-url="https://www.bing.com/search" data-placeholder="在 Bing 中搜索…">
-            <span class="logo">🔍</span> Bing
-            <span class="check">✓</span>
+            <span class="logo">🔍</span> Bing <span class="check">✓</span>
         </button>
         <button class="engine-item" data-engine="baidu" data-url="https://www.baidu.com/s" data-placeholder="在 百度 中搜索…">
-            <span class="logo">🌐</span> 百度
-            <span class="check">✓</span>
+            <span class="logo">🌐</span> 百度 <span class="check">✓</span>
         </button>
         <button class="engine-item" data-engine="yandex" data-url="https://yandex.com/search/" data-placeholder="在 Yandex 中搜索…">
-            <span class="logo">🌍</span> Yandex
-            <span class="check">✓</span>
+            <span class="logo">🌍</span> Yandex <span class="check">✓</span>
         </button>
         <button class="engine-item" data-engine="google" data-url="https://www.google.com/search" data-placeholder="在 Google 中搜索…">
-            <span class="logo">🔴</span> Google
-            <span class="check">✓</span>
+            <span class="logo">🔴</span> Google <span class="check">✓</span>
         </button>
     </div>
 
-    <!-- ===== 添加链接弹窗 ===== -->
+    <!-- ===== 添加快捷链接弹窗 ===== -->
     <div class="shortcut-modal-overlay" id="shortcutModal">
         <div class="shortcut-modal">
             <h3>➕ 添加快捷链接</h3>
-            <div class="modal-sub">输入名称和网址，保存后立刻出现在下方</div>
+            <p class="modal-sub">输入名称和网址，保存后立刻出现在下方</p>
             <label>网站名称</label>
             <input type="text" id="shortcutNameInput" placeholder="例如：B站" maxlength="20" />
             <label>网址</label>
@@ -1054,6 +1150,5 @@
     </div>
 
     <script src="script.js"></script>
-
 </body>
 </html>
