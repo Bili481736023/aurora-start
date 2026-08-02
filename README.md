@@ -6,6 +6,10 @@
 > A beautiful aurora‑themed start page with live clock, search history, and multi‑engine switching.  
 ---
 
+> [!IMPORTANT]
+> 因为学业原因，我们已于2026年8月2日在GitHub和AtomGit上全面暂停更新，最后版本为2.0，如果发现有更新版本，全是诈骗！  
+> Due to academic reasons, we have completely suspended updates on GitHub and AtomGit as of August 2, 2026. The last official version is 2.0. If any newer version is found, it is a scam!
+
 ## 📖 中文说明
 
 ### ⚠️ 重要提示
@@ -33,16 +37,13 @@
 6. 点击 **“加载已解压的扩展程序”**（Load unpacked），选择刚才解压出来的文件夹。
 7. 打开新标签页，极光起始页就出现了！🎉
 
-> 如果你使用的是旧版浏览器（如 Chromium 80 以下），也可尝试直接拖拽 `.crx` 安装，但推荐始终使用上述解压加载方式，以确保兼容性。
+> 如果你使用的是旧版浏览器，也可尝试直接拖拽 `.crx` 安装，但推荐始终使用上述解压加载方式，以确保兼容性。
 
 ### 🛠️ 自定义设置
 - **切换搜索引擎**：点击页面底部当前搜索引擎名称（如“✦ Bing”），弹出面板选择其他引擎。
 - **默认引擎自动保存**：选择后自动记忆，下次打开仍保留。
 - **调整颜色主题**：编辑 `index.html` 中的 CSS `radial-gradient` 值。
 - **添加图标**：在 `manifest.json` 中取消 `"icons"` 注释，放入对应尺寸图片。
-
-### 🤔 为什么不上架商店？
-商店强制要求绑定手机号，且审核繁琐。本项目仅供个人或小范围分享，通过开发者模式加载简单自由，无需受制于平台规则。
 
 ### 📜 授权协议
 本项目采用 **GNU General Public License v3.0 (GPL v3)** 协议。
@@ -98,9 +99,6 @@
 - **Default engine is saved** automatically in `localStorage`.
 - **Change colors**: Edit the CSS `radial-gradient` values in `index.html`.
 - **Add an icon**: Uncomment the `"icons"` field in `manifest.json` and place your own PNG/SVG files.
-
-### 🤔 Why Not Publish to the Store?
-The store requires phone number verification and has a lengthy review process. This project is designed for personal or small‑scale sharing. Loading via developer mode is simple and free from platform restrictions.
 
 ### 📜 License
 This project is licensed under the **GNU General Public License v3.0 (GPL v3)**.
